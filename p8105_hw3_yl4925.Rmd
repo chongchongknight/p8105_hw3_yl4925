@@ -39,3 +39,14 @@ aisle_most = aisle$aisle[1]
 ```
 There are totally `r aisle_row` aisles, and `r aisle_most` is aisle which the most items ordered from. 
 
+Make a plot that shows the number of items vs aisle with more than 10000 items ordered. 
+```{r}
+aisle %>% 
+  filter(nobs > 10000 ) %>%
+  ggplot(aes(x = nobs, y = aisle)) + 
+  labs(
+    title = "Items in different aisle",
+    x = "item count in each aisle",
+    y = "aisle name"
+  ) + geom_point() 
+```
