@@ -9,6 +9,11 @@ output: github_document
 ```{r}
 library(tidyverse)
 library(p8105.datasets)
+library(patchwork)
+```
+
+
+```{r}
 data("instacart")
 instacart_row = nrow(instacart)
 instacart_column = ncol(instacart)
@@ -135,5 +140,22 @@ ggplot(excellent_resp, aes(x = year, y = state_mean)) +
   ) + 
   geom_line(aes(group = locationabbr))
   
+```
+
+
+Two-panel plot for different responses' data value distribution in 2006-NY and 2010-NY
+```{r}
+NY_2006 = brfss_clean %>% 
+  filter(year == 2006) %>% 
+  ggplot(aes(x = data_value, fill = response)) +
+  geom_density(alpha = .4, adjust = .5, color = "black") +
+  theme(legend.position = "none")
+
+NY_2010 = brfss_clean %>% 
+  filter(year == 2010) %>% 
+  ggplot(aes(x = data_value, fill = response)) +
+  geom_density(alpha = .4, adjust = .5, color = "black")
+
+NY_2006 + NY_2010
 ```
 
