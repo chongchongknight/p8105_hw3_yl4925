@@ -50,3 +50,28 @@ aisle %>%
     y = "aisle name"
   ) + geom_point() 
 ```
+
+Three most popular items in "baking ingredients", "dog food care", and packaged vegetable fruits".
+```{r}
+instacart %>% 
+  filter(aisle == "baking ingredients") %>% 
+  group_by(product_name) %>% 
+  summarise(count = n()) %>% 
+  arrange(-count) %>% 
+  filter(1:n() <= 3)
+
+instacart %>% 
+  filter(aisle == "dog food care") %>% 
+  group_by(product_name) %>% 
+  summarise(count = n()) %>% 
+  arrange(-count) %>% 
+  filter(1:n() <= 3)
+
+instacart %>% 
+  filter(aisle == "packaged vegetables fruits") %>% 
+  group_by(product_name) %>% 
+  summarise(count = n()) %>% 
+  arrange(-count) %>% 
+  filter(1:n() <= 3)
+
+```
