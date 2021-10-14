@@ -95,5 +95,16 @@ Load data
 library(p8105.datasets)
 data("brfss_smart2010")
 ```
- 
+
+I do the data cleaning in this chunk and mainly focus on Overall Health topic. And also factor response variable from poor to excellent.
+```{r}
+brfss_smart2010 %>% 
+  janitor::clean_names() %>% 
+  filter(topic == "Overall Health") %>% 
+  mutate(response = factor(response, 
+                           levels = c("Poor", "Fair", "Good", "Very good", "Excellent"), 
+                           ordered = TRUE)) %>% 
+  arrange(response)
+```
+
 
