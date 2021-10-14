@@ -121,4 +121,19 @@ brfss_clean %>%
   )
 ```
 
+Within excellent response, draw a plot of state mean data_value vs year
+```{r}
+excellent_resp = brfss_clean %>% 
+  filter(response == "Excellent") %>% 
+  group_by(year, locationabbr) %>% 
+  summarise(state_mean = mean(data_value))
+excellent_resp 
+
+ggplot(excellent_resp, aes(x = year, y = state_mean)) + 
+  labs(
+    title = "State mean vs year"
+  ) + 
+  geom_line(aes(group = locationabbr))
+  
+```
 
