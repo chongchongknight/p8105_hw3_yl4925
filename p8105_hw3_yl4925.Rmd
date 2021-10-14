@@ -5,3 +5,27 @@ date: "10/12/2021"
 output: github_document
 ---
 
+## Problem 1
+```{r}
+library(tidyverse)
+library(p8105.datasets)
+data("instacart")
+instacart_row = nrow(instacart)
+instacart_column = ncol(instacart)
+```
+
+
+```{r}
+# this is structure for instacart 
+str(instacart)
+```
+
+Instacart is an online grocery service that allows you to shop online from local stores.The size of this dataset is (`r instacart_row`, `r instacart_column`). We find that 4 out of 15 variables are character variable. They are eval_set, product_name, aisle and department. The rest 11 variables are integer variables. They are order_id, product_id, add_to_cart_order, reordered, user_id. order_number, order_dow, order_hour_of_day, days_since_prior_order, aisle_id and department_id. All id variables represent specific  accounts and items.
+
+Reordered variables indicates whether this product has been ordered by this user in the past, with 1 is yes, 0 is no.
+
+Order_number indicates the order sequence of users with n represents this is nth order for user.
+
+Order_dow, order_hour_of_day and days_since_prior_order indicate time of making order and time interval from last order. For example, order_dow is 4 means order is made on Thursday. Order_hour_of_day is 10 means order is made on 10a.m. Days_since_prior_order is 30 means that last order is made 30 days before.
+
+The rest variables indicate products' property.
