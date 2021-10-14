@@ -29,3 +29,13 @@ Order_number indicates the order sequence of users with n represents this is nth
 Order_dow, order_hour_of_day and days_since_prior_order indicate time of making order and time interval from last order. For example, order_dow is 4 means order is made on Thursday. Order_hour_of_day is 10 means order is made on 10a.m. Days_since_prior_order is 30 means that last order is made 30 days before.
 
 The rest variables indicate products' property.
+
+```{r}
+aisle = group_by(instacart, aisle) %>% 
+  summarise(nobs = n()) %>% 
+  arrange(-nobs)
+aisle_row = nrow(aisle)
+aisle_most = aisle$aisle[1]
+```
+There are totally `r aisle_row` aisles, and `r aisle_most` is aisle which the most items ordered from. 
+
