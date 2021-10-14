@@ -87,5 +87,13 @@ instacart %>%
     values_from = mean
   ) 
 ```
+
+
+## Problem 2
+Load data
+```{r}
+library(p8105.datasets)
+data("brfss_smart2010")
+```
  
 
