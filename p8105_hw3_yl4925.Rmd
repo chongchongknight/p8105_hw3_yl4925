@@ -159,3 +159,20 @@ NY_2010 = brfss_clean %>%
 NY_2006 + NY_2010
 ```
 
+## Problem 3
+Load data(including dataset in local data directory)
+```{r}
+accel_df = read_csv("./data/accel_data.csv") %>% 
+  janitor::clean_names() %>% 
+  mutate(weekday_vs_weekend = case_when(
+    day == "Monday"  ~ "Weekday",
+    day == "Tuesday"  ~ "Weekday",
+    day == "Wednesday"  ~ "Weekday",
+    day == "Thursday"  ~ "Weekday",
+    day == "Friday"  ~ "Weekday",
+    day == "Sunday"  ~ "Weekend",
+    day == "Saturday"  ~ "Weekend"
+  )) %>% 
+  select(week, day_id, day, weekday_vs_weekend, everything())
+```
+
