@@ -174,5 +174,12 @@ accel_df = read_csv("./data/accel_data.csv") %>%
     day == "Saturday"  ~ "Weekend"
   )) %>% 
   select(week, day_id, day, weekday_vs_weekend, everything())
+
+
+accel_df %>% 
+  mutate(total_act = rowSums(accel_df[,c(-1, -2, -3, -4)])) %>% 
+  select(week, day_id, day, weekday_vs_weekend, total_act) 
 ```
+The size of this tidied dataset is (`r nrow(accel_df)`, `r ncol(accel_df)`). It includes a new character variable indicating whether it is weekday or weekend. Besides this variavble, this dataset has three time-reflected variables: week(week numeber), day_id(day number), day(Sunday to Saturday), and 1440 activity_k variables indicating the activity of $k_{th}$ minute during a day. And this dataframe contains records of 5 weeks(total 35 days).
+
 
