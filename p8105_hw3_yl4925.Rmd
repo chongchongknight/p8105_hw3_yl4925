@@ -182,4 +182,16 @@ accel_df %>%
 ```
 The size of this tidied dataset is (`r nrow(accel_df)`, `r ncol(accel_df)`). It includes a new character variable indicating whether it is weekday or weekend. Besides this variavble, this dataset has three time-reflected variables: week(week numeber), day_id(day number), day(Sunday to Saturday), and 1440 activity_k variables indicating the activity of $k_{th}$ minute during a day. And this dataframe contains records of 5 weeks(total 35 days).
 
+Total activities over day
+```{r}
+Total_act_df = accel_df %>% 
+  mutate(total_act = rowSums(accel_df[,c(-1, -2, -3, -4)])) %>% 
+  select(week, day_id, day, weekday_vs_weekend, total_act) 
 
+Total_act_df %>% 
+  arrange(total_act)
+
+Total_act_df %>% 
+ggplot(aes(x = day_id, y = total_act, color = day)) + geom_point() + geom_line()
+```
+Actually we cannot easily see the trends from data table, so I make a plot. However, it is so messy to find exact trend even with plot. So there might be no apprent trends based on my current data and plot.
