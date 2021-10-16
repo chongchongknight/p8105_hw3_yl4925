@@ -233,13 +233,25 @@ It looks better, but still messy. I will try to omit actual time_of_day("day_id 
 
 ```{r}
 accel_plot_df %>% 
-  filter(time_of_day %% 24 == 0) %>% 
-  ggplot(aes(x = time_of_day, y = activity, color = day)) + 
-  geom_smooth(se = FALSE)
-```
-We can see there is an activity "peak" for each day, and "peak" time is close to noon.
+  mutate(week  = recode(week, '1' = "week1", '2' = "week2", '3' = "week3", 
+                        '4' = "week4", '5' = "week5"),
+         week_day = paste(week, day, sep = "_")) %>% 
+  filter(time_of_day %% 6 == 0) %>% 
+  ggplot(aes(x = time_of_day, y = activity, color = week_day)) + 
+  theme(legend.position = "none") +
+  geom_smooth(se = FALSE) + 
+  scale_x_continuous(
+    breaks = c(0, 240, 480, 720, 960, 1200, 1440), 
+    labels = c("0:00.", "4:00.","8:00", "12:00", "16:00", "20:00", "24:00"),
+    limits = c(-1, 1441))
 
-I will try to use heatmap to show its trends.
+accel_plot_df %>% 
+  mutate(week  = recode(week, '1' = "week1", '2' = "week2", '3' = "week3", 
+                        '4' = "week4", '5' = "week5"),
+         week_day = paste(week, day, sep = "_")) %>% 
+  filter(time_of_day %% 6 == 0, week_day == "week1_Wednesday") 
+```
+We can see there is an activity "peak" for almost each of 35 days, and "peak" is in time intervel [8:00, 20:00]. But this is still confused because there are 35 lines, so I will try to use heatmap to show its trends more accurately.
 
 ```{r}
 heatmap_df = accel_df %>% 
@@ -263,13 +275,26 @@ heatmap_df %>%
   labs(
     title = "heatmap for activity",
     x = "time of day",
-    y = "day of week"
-  ) +
+    y = "week and day"
+  ) + 
+  scale_fill_manual(values = c("#990000", "#999900", "#009900", "#009999",
+                               "#000099", "#990099", "#99004C")) +
   scale_x_continuous(
     breaks = c(0, 240, 480, 720, 960, 1200, 1440), 
     labels = c("0:00.", "4:00.","8:00", "12:00", "16:00", "20:00", "24:00"),
     limits = c(-1, 1441)) +
-  scale_alpha(range = c(0.1, 2)) 
+  scale_y_continuous(
+    breaks = c(1, 5, 6, 10, 11, 15, 16, 20, 21, 25, 26, 30, 31, 35), 
+    labels = c("week1Sunday", "week5Sunday",
+               "week1Monday", "week5Monday",
+               "week1Tuesday", "week5Tuesday",
+               "week1Wedneaday", "week5Wedneaday",
+               "week1Thursday", "week5Thursday",
+               "week1Friday", "week5Friday",
+               "week1Saturday", "week5Saturday"),
+    limits = c(0, 36)) +
+  scale_alpha(range = c(0.4, 10)) 
   
 ```
 
+Through heatmap we can see that in time interval [8:00, 20:00], it has deeper color than the rest time of a day. Since we have use alpha to represent activity, we can say in time interval [8:00, 20:00], this man's activity is higher than the rest time of a day.(greater activity value means greater alpha, thus deeper color). This time interval is also reasonable because 8:00 is close to time when we usually get up, and 20:00 is close to tiem when we prepare to rest at home.
