@@ -58,32 +58,23 @@ aisle %>%
 
 Three most popular items in "baking ingredients", "dog food care", and packaged vegetable fruits".
 ```{r}
-instacart %>% 
-  filter(aisle == "baking ingredients") %>% 
-  group_by(product_name) %>% 
+three_pop = instacart %>% 
+  filter(aisle == "baking ingredients" | aisle == "dog food care" | 
+           aisle == "packaged vegetables fruits") %>% 
+  group_by(aisle, product_name) %>% 
   summarise(count = n()) %>% 
   arrange(-count) %>% 
-  filter(1:n() <= 3)
-
-instacart %>% 
-  filter(aisle == "dog food care") %>% 
-  group_by(product_name) %>% 
-  summarise(count = n()) %>% 
-  arrange(-count) %>% 
-  filter(1:n() <= 3)
-
-instacart %>% 
-  filter(aisle == "packaged vegetables fruits") %>% 
-  group_by(product_name) %>% 
-  summarise(count = n()) %>% 
-  arrange(-count) %>% 
-  filter(1:n() <= 3)
+  filter(aisle == "baking ingredients" | aisle == "dog food care" | 
+           aisle == "packaged vegetables fruits", 1:n() <= 3)
+knitr::kable(three_pop)
 
 ```
 
+
+
 Mean hour of the day at which Pink Lady Apples and Coffee Ice Cream are ordered on each day of the week
 ```{r}
-instacart %>% 
+mean_Apple_Icecream = instacart %>% 
   filter(product_name == "Pink Lady Apples" | product_name == "Coffee Ice Cream") %>% 
   group_by(product_name, order_dow) %>% 
   summarise(mean = mean(order_hour_of_day)) %>% 
@@ -91,6 +82,7 @@ instacart %>%
     names_from = order_dow,
     values_from = mean
   ) 
+knitr::kable(mean_Apple_Icecream)
 ```
 
 
@@ -113,18 +105,22 @@ brfss_clean = brfss_smart2010 %>%
 ```
 
 
-No less than 7 observed in 2002 and 2010
+No less than 7 observed in 2002 and 2010. We need to notice that in one location in a state could have at most five responses, so we should delete the duplicated one, that is, we should count the distinct locationdesc regardless of responses.
 ```{r}
-brfss_clean %>% 
-  filter(year == 2002 | year == 2010) %>% 
+distinct_brfss_clean = brfss_clean[!duplicated(brfss_clean[,1:3]),]
+greater_7_in02or10 = distinct_brfss_clean %>% 
+  filter(year == 2010 | year == 2002) %>% 
   group_by(locationabbr, year) %>% 
   summarise(n_loca = n()) %>% 
   filter(n_loca >= 7) %>% 
   pivot_wider(
-    names_from = year,
+    names_from = locationabbr,
     values_from = n_loca
   )
+knitr::kable(greater_7_in02or10)
 ```
+
+
 
 Within excellent response, draw a plot of state mean data_value vs year
 ```{r}
@@ -149,12 +145,18 @@ NY_2006 = brfss_clean %>%
   filter(year == 2006) %>% 
   ggplot(aes(x = data_value, fill = response)) +
   geom_density(alpha = .4, adjust = .5, color = "black") +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  labs(
+    x = "2006data_value"
+  )
 
 NY_2010 = brfss_clean %>% 
   filter(year == 2010) %>% 
   ggplot(aes(x = data_value, fill = response)) +
-  geom_density(alpha = .4, adjust = .5, color = "black")
+  geom_density(alpha = .4, adjust = .5, color = "black") +
+  labs(
+    x = "2010data_value"
+  )
 
 NY_2006 + NY_2010
 ```
